@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>vroom — защита текста</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #eef1f4;
+      color: #183044;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #d65b16;
+    }
+
+    #protected {
+      background: white;
+      padding: 25px;
+      border-top: 5px solid #d65b16;
+      line-height: 1.7;
+    }
+
+    #protected, #protected * {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>vroom</h1>
+  <p>Учебная страница о доставке автомобилей из США.</p>
+
+  <section id="protected" tabindex="0">
+    <h2>Как проходит доставка автомобиля</h2>
+    <p>
+      Сначала выбирают автомобиль и проверяют документы.
+      После покупки машину доставляют в порт.
+      Затем организуют перевозку и передачу получателю.
+    </p>
+    <p>Попробуйте выделить или скопировать этот текст.</p>
+  </section>
+
+  <p id="message" role="status"></p>
+
+  <script>
+    const block = document.getElementById("protected");
+    const message = document.getElementById("message");
+
+    function stopCopy(event) {
+      event.preventDefault();
+      message.textContent = "Копирование текста ограничено.";
+    }
+
+    for (const action of ["copy", "cut", "contextmenu", "selectstart"]) {
+      block.addEventListener(action, stopCopy);
+    }
+
+    block.addEventListener("keydown", function(event) {
+      const key = event.key.toLowerCase();
+
+      if ((event.ctrlKey || event.metaKey) &&
+          ["c", "x", "insert"].includes(key)) {
+        stopCopy(event);
+      }
+    });
+  </script>
+</body>
+</html>
